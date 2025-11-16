@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>My Tasks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen p-6">
+
+    <div class="max-w-xl mx-auto">
+
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-semibold">My Tasks</h1>
+            <a href="{% url 'logout' %}" class="text-red-500 underline">Logout</a>
+        </div>
+
+        <div class="flex mb-4">
+            <form method="POST" class="flex w-full">
+                {% csrf_token %}
+                <input name="title" type="text" placeholder="New Task..."
+                    class="flex-grow px-3 py-2 border rounded-l-lg focus:ring-2 focus:ring-blue-400" required>
+                <button type="submit" class="px-4 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600">
+                    Add
+                </button>
+            </form>
+        </div>
+
+        <ul class="space-y-3">
+            {% for task in tasks %}
+            <li class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+
+                <span class="text-gray-700 {% if task.completed %} line-through text-gray-400 {% endif %}">
+                    {{ task.title }}
+                </span>
+
+                <div class="flex gap-4">
+
+                    {% if not task.completed %}
+                    <a href="{% url 'complete_task' task.id %}" class="text-green-600 font-semibold">
+                        Done
+                    </a>
+                    {% else %}
+                    <span class="text-green-500 font-semibold">✔</span>
+                    {% endif %}
+
+                    <a href="{% url 'update_task' task.id %}" class="text-blue-500">Edit</a>
+
+                    <a href="{% url 'delete_task' task.id %}" class="text-red-500">Delete</a>
+
+                </div>
+            </li>
+            {% empty %}
+            <p class="text-gray-500 text-center">No tasks yet...</p>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</body>
+
+</html>
